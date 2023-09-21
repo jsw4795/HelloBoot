@@ -25,6 +25,12 @@ spring:
         show_sql: true
     hibernate:
       ddl-auto: update
-
+  
+  #변경사항 실시간 반영
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
    
       

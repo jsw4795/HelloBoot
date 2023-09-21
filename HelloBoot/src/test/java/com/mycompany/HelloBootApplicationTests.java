@@ -11,7 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mycompany.helloboot.answer.Answer;
+import com.mycompany.helloboot.answer.AnswerRepository;
+import com.mycompany.helloboot.question.Question;
+import com.mycompany.helloboot.question.QuestionRepository;
 
+// 테스트코드
 @SpringBootTest
 class HelloBootApplicationTests {
 
