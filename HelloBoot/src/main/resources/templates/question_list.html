@@ -1,6 +1,10 @@
-<link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+<!-- 부모 탬플릿인 layout.html 에서 부트스트랩 스타일을 링크하기 때문에 현재 파일에서는 링크 안함 -->
+<!-- 템플릿을 상속하는 코드 -->
+<!-- ~{layout} 은 layout.html 파일을 의미한다. -->
+<html layout:decorate="~{layout}">
 
-<div class="container my-3">
+<!-- 이 태그 안에 들어가는 내용이 부모 템플릿의 바디에 추가해놓은 div 태그에 출력된다. -->
+<div layout:fragment="content" class="container my-3">
 	<table class="table">
 		<thead class="table-dark">
 			<tr>
@@ -24,4 +28,8 @@
 			</tr>
 		</tbody>
 	</table>
+	<!-- bootstrap의 클래스를 이용해서 a태그지만 버튼처럼 보이게 만듦 -->
+	<a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 </div>
+
+</html>
