@@ -13,9 +13,16 @@
 </head>
 
 <body>
+	<!--네비게이션 바-->
+	<!-- navbar.html 파일에서 th:fragment값이 navbarFragment인 엘리먼트의 내용으로 교체 -->
+	<nav th:replace="~{navbar :: navbarFragment}"></nav>
+	
 	<!-- 기본 템플릿 안에 삽입될 내용 Start -->
 	<th:block layout:fragment="content"></th:block>
 	<!-- 기본 템플릿 안에 삽입될 내용 End -->
+	
+	<!-- BootStrap JS -->
+	<script th:src="@{/bootstrap.min.js}"></script>
 </body>
 
 </html>
