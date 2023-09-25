@@ -3,10 +3,10 @@
 	<h5 class="my-3 border-bottom pb-2">질문등록</h5>
 	<form th:action="@{/question/create}" th:object="${questionForm}" method="post">
 		
-		<!-- post 방식으로 submit할 때 음./.. -->
-		<div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
-        </div>
+		<!-- 공백을 submit 할 시 오류 메세지 -->
+		<!-- div태그의 내용을 form_errors.html 파일안에 
+		th:fragment 속성명이 formErrorsFragment인 엘리먼트로 교체 -->
+		<div th:replace="~{form_errors :: formErrorsFragment}"></div>
         
 		<div class="mb-3">
 			<label for="subject" class="form-label">제목</label>
