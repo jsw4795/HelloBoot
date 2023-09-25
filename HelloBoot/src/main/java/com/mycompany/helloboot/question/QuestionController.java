@@ -2,6 +2,7 @@ package com.mycompany.helloboot.question;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,11 +36,12 @@ public class QuestionController {
 	
 	@GetMapping("/list")
 	// Model 객체가 컨트롤러 메소드에 매개변수로 지정되기만 하면 스프링부트가 자동으로 Model 객체를 생성
-	public String list(Model model) {
-		List<Question> questionList = this.questionService.getList();
-		// model에 "qustionList"라는 이름으로 DB에서 검색한 데이터 저장
+	// get방식으로 요청된 URL에서 page값이 있으면 가져오고 아니면 0으로 설정 (첫 페이지가 0이다)
+	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+		Page<Question> paging = this.questionService.getList(page);
+		// model에 "paging"라는 이름으로 DB에서 검색한 데이터 저장
 		// 이것은 HTML에서 타임리프 템플릿으로 불러올 것이다.
-		model.addAttribute("questionList", questionList);
+		model.addAttribute("paging", paging);
 		// src/main/resources/templates 에 있는 question_list.html을 찾아서 리턴한다
 		return "question_list";
 	}

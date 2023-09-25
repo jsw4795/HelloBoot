@@ -32,3 +32,12 @@
 	@{내용} 내용으로 링크한다.
 	**문자열과 자바 객체값을 더할 때에는 반드시 앞뒤에 | 를 추가해야한다.
 	
+클래스추가
+	th:classappend="조건식 ? 클래스값"
+	
+	th:classappend="${!paging.hasPrevious} ? 'disabled'
+	- 이전 페이지가 없으면 disabled 클래스 추가
+	
+	
+	조건이 참인 경우 클래스값을 class 속성에 추가한다.
+	

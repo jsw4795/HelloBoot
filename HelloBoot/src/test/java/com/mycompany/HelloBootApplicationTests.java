@@ -1,53 +1,58 @@
 package com.mycompany;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.ContextConfiguration;
 
-import com.mycompany.helloboot.answer.Answer;
-import com.mycompany.helloboot.answer.AnswerRepository;
-import com.mycompany.helloboot.question.Question;
-import com.mycompany.helloboot.question.QuestionRepository;
+import com.mycompany.helloboot.HelloBootApplication;
+import com.mycompany.helloboot.question.QuestionService;
+
 
 // 테스트코드
 @SpringBootTest
+// 어플리케이션 클래스를 연결해줌 (자동으로 못찾아서 추가)
+@ContextConfiguration(classes = HelloBootApplication.class)
 class HelloBootApplicationTests {
 
 	// 스프링이 대신 객체를 생성해서 변수에(?) 주입해준다
 	// @Autowired보다는 생성자를 통한 객체 주입방식이 권장된다.
 	// 지금은 테스트이므로 이렇게 함
 	@Autowired
-	private QuestionRepository questionRepository;
-	
-	@Autowired
-	private AnswerRepository answerRepository;
+	private QuestionService questionService;
 	
 	
-	// 테스트코드에서 DB관련 동장 한 번 하고 접속이 끊기는 것을 방지
-	// 메소드가 종료될 때까지 DB 세션이 유지된다
-	@Transactional
+	
 	@Test
 	void testJpa() {
-		// 기본 테스트 코드에서는 findById를 실행하고 DB와 연결이 끊긴다.
-		Optional<Question> oq = this.questionRepository.findById(2);
-		assertTrue(oq.isPresent());
-		Question q = oq.get();
-		
-		// Question 객체에서 Answer들 List를 가져오는 메소드
-		List<Answer> answerList = q.getAnswerList();
-		
-		assertEquals(1, answerList.size());
-		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+		for(int i = 0; i <= 300; i++) {
+			String subject = "테스트 데이터 입니다 : " + i;
+			String content = "내용무";
+			this.questionService.create(subject, content);
+		}
 	}
+}
 	
 	
+	
+	
+	
+//	// 테스트코드에서 DB관련 동장 한 번 하고 접속이 끊기는 것을 방지
+//	// 메소드가 종료될 때까지 DB 세션이 유지된다
+//	@Transactional
+//	@Test
+//	void testJpa() {
+//		// 기본 테스트 코드에서는 findById를 실행하고 DB와 연결이 끊긴다.
+//		Optional<Question> oq = this.questionRepository.findById(2);
+//		assertTrue(oq.isPresent());
+//		Question q = oq.get();
+//		
+//		// Question 객체에서 Answer들 List를 가져오는 메소드
+//		List<Answer> answerList = q.getAnswerList();
+//		
+//		assertEquals(1, answerList.size());
+//		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+//	}
 	
 	
 	// 질문에 대한 답변을 만들어서 DB에 저장
@@ -136,7 +141,3 @@ class HelloBootApplicationTests {
 //        q2.setCreateDate(LocalDateTime.now());
 //        this.questionRepository.save(q2);  // 두번째 질문 저장
 //    }
-	
-	
-
-}

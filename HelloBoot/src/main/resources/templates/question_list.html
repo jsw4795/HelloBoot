@@ -18,8 +18,8 @@
 			<!-- th:each="[각 요소 변수 이름] : ${[Model에 있는 리스트 변수명]}" 
 			: 개선된 for문 이라고 보면 될듯
 			: <tr></tr> 전체를 리스트의 크기만큼 반복해서 출력한다.
-			: 여기에선 리스트에 Question 객체가 담겨있으니까 거기서 속성을 뽑아서 텍스트로 쓰는듯-->
-			<tr th:each="question, loop : ${questionList}">
+			: 여기에선 리스트에 Paging 객체가 담겨있으니까 거기서 속성을 뽑아서 텍스트로 쓰는듯-->
+			<tr th:each="question, loop : ${paging}">
 				<td th:text="${loop.count}"></td>
 				<!-- th:text="${변수명.속성명}"
 			: 현재 객체의 속성명을 <td>의 텍스트로 표시 -->
@@ -28,6 +28,30 @@
 			</tr>
 		</tbody>
 	</table>
+	
+	<!-- 페이징 처리 -->
+	<div th:if="${!paging.isEmpty()}">
+		<ul class="pagination justify-content-center">
+			<li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+				<a class="page-link" th:href="@{|?page=${paging.number-1}|}">
+					<span>이전</span>
+				</a>
+			</li>
+			<li th:each="page : ${#numbers.sequence(0, paging.totalPages-1)}"
+				th:if="${page >= paging.number-5 and page <= paging.number+5}"
+				th:classappend="${page == paging.number} ? 'active'"
+				class="page-item">
+				<a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+			</li>
+			<li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+				<a class="page-link" th:href="@{|page=${paging.number+1}|}">
+					<span>다음</span>
+				</a>
+			</li>
+			
+		</ul>
+	</div>
+	
 	<!-- bootstrap의 클래스를 이용해서 a태그지만 버튼처럼 보이게 만듦 -->
 	<a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 </div>

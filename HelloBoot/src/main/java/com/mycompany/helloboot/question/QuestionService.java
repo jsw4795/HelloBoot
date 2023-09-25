@@ -1,9 +1,14 @@
 package com.mycompany.helloboot.question;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.mycompany.helloboot.DataNotFoundException;
@@ -19,8 +24,16 @@ public class QuestionService {
 	
 	private final QuestionRepository questionRepository;
 	
-	public List<Question> getList() {
-		return this.questionRepository.findAll();
+	public Page<Question> getList(int page) {
+		// "createDate"의 내림차순으로 정렬하는 Sort객체를 추가한다.
+		// (여러가지 정렬 조건이 있을 수 있기 때문에 List를 사용한다.
+		List<Sort.Order> sorts = new ArrayList<>();
+		sorts.add(Sort.Order.desc("createDate"));
+		// page는 보여줄 페이지 번호이다.
+		// 한 페이지에 10개의 데이터를 보여준다.
+		// 해당 페이지의 데이터만 조회하도록 쿼리가 변경된다. (처리시간 단축효과)
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+		return this.questionRepository.findAll(pageable);
 	}
 	
 	public Question getQuestion(Integer id) {
@@ -41,4 +54,5 @@ public class QuestionService {
 		q.setCreateDate(LocalDateTime.now());
 		this.questionRepository.save(q);
 	}
+	
 }
