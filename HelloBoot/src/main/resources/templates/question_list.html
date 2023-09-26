@@ -1,7 +1,7 @@
 <!-- 부모 탬플릿인 layout.html 에서 부트스트랩 스타일을 링크하기 때문에 현재 파일에서는 링크 안함 -->
 <!-- 템플릿을 상속하는 코드 -->
 <!-- ~{layout} 은 layout.html 파일을 의미한다. -->
-<html layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}" >
 
 <!-- 이 태그 안에 들어가는 내용이 부모 템플릿의 바디에 추가해놓은 div 태그에 출력된다. -->
 <div layout:fragment="content" class="container my-3">
@@ -33,19 +33,29 @@
 	<div th:if="${!paging.isEmpty()}">
 		<ul class="pagination justify-content-center">
 			<li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+				<a class="page-link" th:href="@{|?page=0|}">
+					<span>처음</span>
+				</a>
+			</li>
+			<li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
 				<a class="page-link" th:href="@{|?page=${paging.number-1}|}">
 					<span>이전</span>
 				</a>
 			</li>
-			<li th:each="page : ${#numbers.sequence(0, paging.totalPages-1)}"
+			<li th:each="page : ${#numbers.sequence(1, paging.totalPages)}"
 				th:if="${page >= paging.number-5 and page <= paging.number+5}"
-				th:classappend="${page == paging.number} ? 'active'"
+				th:classappend="${page == paging.number+1} ? 'active'"
 				class="page-item">
-				<a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+				<a th:text="${page}" class="page-link" th:href="@{|?page=${page-1}|}"></a>
 			</li>
 			<li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-				<a class="page-link" th:href="@{|page=${paging.number+1}|}">
+				<a class="page-link" th:href="@{|?page=${paging.number+1}|}">
 					<span>다음</span>
+				</a>
+			</li>
+			<li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+				<a class="page-link" th:href="@{|?page=${paging.totalPages-1}|}">
+					<span>마지막</span>
 				</a>
 			</li>
 			
@@ -55,5 +65,4 @@
 	<!-- bootstrap의 클래스를 이용해서 a태그지만 버튼처럼 보이게 만듦 -->
 	<a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 </div>
-
 </html>

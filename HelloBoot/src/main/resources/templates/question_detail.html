@@ -4,7 +4,7 @@
      (템플릿 상속을 하였기에 링크 태그 삭제)
 <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">  -->
 
-<html layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 
 <div layout:fragment="content" class="container my-3">
 	<!-- 질문 -->

@@ -1,3 +1,7 @@
+server:
+  port: 8080
+
+
 #AutoConfiguration에서 오버라이딩 가능하게 설정
 spring:
 
