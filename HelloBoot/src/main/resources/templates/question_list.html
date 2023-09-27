@@ -20,7 +20,7 @@
 			: <tr></tr> 전체를 리스트의 크기만큼 반복해서 출력한다.
 			: 여기에선 리스트에 Paging 객체가 담겨있으니까 거기서 속성을 뽑아서 텍스트로 쓰는듯-->
 			<tr th:each="question, loop : ${paging}">
-				<td th:text="${loop.count}"></td>
+				<td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
 				<!-- th:text="${변수명.속성명}"
 			: 현재 객체의 속성명을 <td>의 텍스트로 표시 -->
 				<td><a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a></td>
