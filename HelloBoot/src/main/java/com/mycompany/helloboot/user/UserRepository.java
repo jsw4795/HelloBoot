@@ -1,5 +1,7 @@
 package com.mycompany.helloboot.user;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /* Repository : 엔티티에 의해 생성된 테이블에 접근하는 메서드들을 사용하기 위한 인터페이스다.
@@ -36,4 +38,7 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
 	 *   - 매개변수가 속성명에 포함된 엔티티를 찾는다.
 	 *   ** 매개변수 는 %문자열% 이런 식으로 해야한다! (% 위치는 자유)
 	 */
+	
+	// UserSecurityService에서 사용할 username으로 객체를 찾는 메서드
+	Optional<SiteUser> findByusername(String username);
 }

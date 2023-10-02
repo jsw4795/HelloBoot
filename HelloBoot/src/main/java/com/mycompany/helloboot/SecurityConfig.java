@@ -2,6 +2,8 @@ package com.mycompany.helloboot;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,7 +37,15 @@ public class SecurityConfig {
 		 * X프레임 옵션 : DENY - 프레이밍 금지, SAMEORIGIN - 외부 사이트에 의한 프레이밍 금지, ALLOW-FROM origin - 특정 사이트에서 프레이밍 허용*/
 		.headers((header) ->
 				header.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-		
+		/* .formLogin 메서드는 로그인 설정을 담당하는 부분이다
+		 * 	로그인 페이지의 url 은 "/user/login이고, 로그인 성공 시 이동하는 디폴트 url 은 "/" 이다. */
+		.formLogin((formLogin) -> 
+				formLogin.loginPage("/user/login").defaultSuccessUrl("/"))
+		// 로그아웃 구현(?)
+		.logout((logout) -> 
+				logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+					  .logoutSuccessUrl("/")
+					  .invalidateHttpSession(true))	// 로그아웃 시 사용자 세션 삭제
 		;
 		return http.build();
 	}
@@ -51,5 +61,12 @@ public class SecurityConfig {
 	@Bean
 	PasswordEncoder passwordEncoder() { // PasswordEncoder 는 BCryptPasswordEncoder의 부모클래스
 		return new BCryptPasswordEncoder();
+	}
+	
+	// AuthenticationManager 는 스프링 시큐리티의 인증을 담당한다.
+	// 사용자 인증 시, UserSecurityService와 PasswordEncoder를 사용한다. (이 두 가지를 구현해야 한다)
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
 	}
 }
