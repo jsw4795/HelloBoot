@@ -28,7 +28,7 @@ class HelloBootApplicationTests {
 		for(int i = 0; i <= 300; i++) {
 			String subject = "테스트 데이터 입니다 : " + i;
 			String content = "내용무";
-			this.questionService.create(subject, content);
+			this.questionService.create(subject, content, null);
 		}
 	}
 }

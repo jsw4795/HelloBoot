@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.mycompany.helloboot.answer.Answer;
+import com.mycompany.helloboot.user.SiteUser;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,5 +53,10 @@ public class Question {
 	
 	// 엔티티 클래스는 @Column이 없어도 컬럼으로 인식한다
 	// 컬럼으로 쓰기 싫을 때만 @Transient 를 사용한다.
-
+	
+	// 여러개의 엔티티에서 하나의 엔티티를 참조한다.
+	// 참조 당하는 테이블의 id 값이 저장된다.
+	@ManyToOne
+	private SiteUser author;
+	
 }

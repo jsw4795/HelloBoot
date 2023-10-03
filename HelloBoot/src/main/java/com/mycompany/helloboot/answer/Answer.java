@@ -3,6 +3,7 @@ package com.mycompany.helloboot.answer;
 import java.time.LocalDateTime;
 
 import com.mycompany.helloboot.question.Question;
+import com.mycompany.helloboot.user.SiteUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,4 +32,7 @@ public class Answer {
 	// 반대는 OneToMany
 	@ManyToOne
 	private Question question;
+	
+	@ManyToOne
+	private SiteUser author;
 }

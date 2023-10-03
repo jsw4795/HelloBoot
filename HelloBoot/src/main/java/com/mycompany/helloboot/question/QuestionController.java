@@ -1,8 +1,10 @@
 package com.mycompany.helloboot.question;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.helloboot.answer.AnswerForm;
+import com.mycompany.helloboot.user.SiteUser;
+import com.mycompany.helloboot.user.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class QuestionController {
 
 	private final QuestionService questionService;
+	private final UserService userService;
 	
 	@GetMapping("/list")
 	// Model 객체가 컨트롤러 메소드에 매개변수로 지정되기만 하면 스프링부트가 자동으로 Model 객체를 생성
@@ -58,6 +63,8 @@ public class QuestionController {
 		return "question_detail";
 	}
 	
+	// 로그인이 되어있지 않으면 로그인 페이지로 이동시킨다.
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/create")
 	/*
 	 * question_form.html에 questionForm 이라는 오브젝트로 확인하는 코드가 들어갔기 때문에 get방식에서도 일단
@@ -68,6 +75,7 @@ public class QuestionController {
 		return "question_form";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/create")
 	/*
 	 * @Valid 를 폼 클래스 앞에 붙이면 폼클래스안에 있는 검증 기능이 동작한다.
@@ -77,11 +85,14 @@ public class QuestionController {
 	 * 
 	 * BindingResult 는 @Valid 로 검증이 수행된 결과를 의미하는 객체다.
 	 * -- BindingResult는 항상 @Valid 매개변수 바로 뒤에 위치해야 한다. (아니면 작동안함)
-	 */	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+	 */	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult,
+			 Principal principal) {
+		
+		SiteUser siteUser = this.userService.getUser(principal.getName());
 		// @Valid의 검증 결과에 문제가 있다면 question_form.html을 리턴
 		if(bindingResult.hasErrors())
 			return "question_form";
-		this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+		this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
 		return "redirect:/question/list"; // 질문 저장 후 질문 목록으로 이동
 	}
 }
