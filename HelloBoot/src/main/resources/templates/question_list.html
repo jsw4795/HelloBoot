@@ -7,9 +7,10 @@
 <div layout:fragment="content" class="container my-3">
 	<table class="table">
 		<thead class="table-dark">
-			<tr>
+			<tr class="text-center">
 				<th>번호</th>
-				<th>제목</th>
+				<th style="width:50%">제목</th>
+				<th>글쓴이</th>
 				<th>작성일지</th>
 			</tr>
 		</thead>
@@ -19,17 +20,18 @@
 			: 개선된 for문 이라고 보면 될듯
 			: <tr></tr> 전체를 리스트의 크기만큼 반복해서 출력한다.
 			: 여기에선 리스트에 Paging 객체가 담겨있으니까 거기서 속성을 뽑아서 텍스트로 쓰는듯-->
-			<tr th:each="question, loop : ${paging}">
+			<tr class="text-center" th:each="question, loop : ${paging}">
 				<td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
 				<!-- th:text="${변수명.속성명}"
 			: 현재 객체의 속성명을 <td>의 텍스트로 표시 -->
-				<td>
+				<td class="text-start">
 				<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
 				<span class="text-danger small ms-2"
 					th:if="${#lists.size(question.answerList) > 0}"
 					th:text="${#lists.size(question.answerList)}">
 				</span>
 				</td>
+				<td><span th:if="${question.author != null}" th:text="${question.author.username}"></span></td>
 				<td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
 			</tr>
 		</tbody>
