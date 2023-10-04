@@ -1,7 +1,12 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <div layout:fragment="content" class="container">
 	<h5 class="my-3 border-bottom pb-2">질문등록</h5>
-	<form th:action="@{/question/create}" th:object="${questionForm}" method="post">
+	<!-- th:action 속성을 삭제했다 (현재 호출된 URL로 폼이 전송된다) -->
+	<form th:object="${questionForm}" method="post">
+		<!-- th:action 속성이 없으면 CSRF 값이 자동 생성되지 않기 때문에 hidden input 을 통해 보내줘야 한다
+			(이런 식으로 작성하는 것이 수동으로 CSRF 값을 추가하기 위한 스프링 시큐리티 규칙이다.) 
+			CSRF란 실제 사이트에서 작성된 것인지 확인하기 위해 시큐리티가 토큰을 발행해서 확인하는것 -->
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 		
 		<!-- 공백을 submit 할 시 오류 메세지 -->
 		<!-- div태그의 내용을 form_errors.html 파일안에 

@@ -10,39 +10,97 @@
 	<!-- 질문 -->
 	<h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
 	<div class="card-body">
-		<div class="card-text" style="white-space: pre-line;" th:text="${question.content}"></div>
+		<div class="card-text" style="white-space: pre-line;"
+			th:text="${question.content}"></div>
 		<div class="d-flex justify-content-end">
+			<div th:if="${question.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+				<div class="mb-2">modified at</div>
+				<div th:text="${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+			</div>
 			<div class="badge bg-light text-dark p-2 text-start">
 				<div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
 			</div>
 		</div>
-
+		<!-- 질문 수정 삭제 버튼 -->
+		<div class="my-3">
+			<!-- #authentication.getPrincipal() 은 Principal 객체를 리턴하는 타임리프 유틸리티 -->
+			<a th:href="@{|/question/modify/${question.id}|}"
+				class="btn btn-sm btn-outline-secondary"
+				sec:authorize="isAuthenticated()"
+				th:if="${question.author != null 
+				and #authentication.getPrincipal().getUsername() == question.author.username}"
+				th:text="수정"></a> 
+				
+			<!-- - href 값으로 "javascript:" 가 오면 경로로 해석하지 않고 뒤에 부분을 자바스크립트로 해석해 실행한다.
+				 -  void(내용) : 안에 내용이 실행되지만 undifined를 리턴한다 (여기서는 내용 없는 코드)-->
+			<a href="javascript:void(0);"
+				th:data-uri="@{|/question/delete/${question.id}|}"
+				class="delete btn btn-sm btn-outline-secondary"
+				sec:authorize="isAuthenticated()"
+				th:if="${question.author != null and 
+				#authentication.getPrincipal().getUsername() == question.author.username}"
+				th:text="삭제"></a>
+		</div>
 	</div>
 
 	<!-- 답변의 개수 표시 -->
-	<h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
+	<h5 class="border-bottom my-3 py-2"
+		th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
 
 	<!-- 답변 반복 시작 -->
 	<!-- 질문의 개수만큼 div를 생성하고, 텍스트는 각각 답변의 내용으로 출력한다 -->
 	<div class="card my-3" th:each="answer : ${question.answerList}">
 		<div class="card-body">
-			<div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
+			<div class="card-text" style="white-space: pre-line;"
+				th:text="${answer.content}"></div>
 			<div class="d-flex justify-content-end">
-				<div class="badge bg-light text-dark p-2 text-start">
-					<div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+				<div th:if="${answer.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+					<div class="mb-2">modified at</div>
+					<div th:text="${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
 				</div>
+				<div class="badge bg-light text-dark p-2 text-start">
+					<div
+						th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+				</div>
+			</div>
+			<!-- 답변 수정 삭제 버튼 -->
+			<div class="my-3">
+				<!-- 주소에서 앞에 '/' 빼먹으면 현재 주소 뒤에 붙어버려서 오류난다 -->
+				<a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+					sec:authorize="isAuthenticated()"
+					th:if="${answer.author != null and
+					#authentication.getPrincipal().getUsername() == answer.author.username}"
+					th:text="수정"></a>
+				<a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
+					class="delete btn btn-sm btn-outline-secondary"
+					sec:authorize="isAuthenticated()"
+					th:if="${answer.author != null and
+					#authentication.getPrincipal().getUsername() == answer.author.username}"
+					th:text="삭제"></a>
 			</div>
 		</div>
 	</div>
 	<!-- 답변 반복 끝 -->
-	
+
 	<!-- 답변 작성 -->
-	<form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
+	<form th:action="@{|/answer/create/${question.id}|}"
+		th:object="${answerForm}" method="post" class="my-3">
 		<div th:replace="~{form_errors :: formErrorsFragment}"></div>
 		<!-- 로그인 안돼있으면 disabled 된 textarea가 표시됨 -->
-		<textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" id="content" rows="15" class="form-control"></textarea>
-		<textarea sec:authorize="isAuthenticated()" th:field="*{content}" id="content" rows="15" class="form-control"></textarea>
+		<textarea sec:authorize="isAnonymous()" disabled th:field="*{content}"
+			id="content" rows="15" class="form-control"></textarea>
+		<textarea sec:authorize="isAuthenticated()" th:field="*{content}"
+			id="content" rows="15" class="form-control"></textarea>
 		<input type="submit" value="답변등록" class="btn btn-primary my-2">
 	</form>
 </div>
+<script layout:fragment="script" type="text/javascript">
+	const delete_elements = document.getElementsByClassName("delete");
+	Array.from(delete_elements).forEach(function(element) {
+		element.addEventListener('click', function() {
+			if(confirm("정말로 삭제하시겠습니까?"))
+				location.href = this.dataset.uri;
+		});
+	});
+</script>
 </html>

@@ -23,6 +23,12 @@
 	
 	<!-- BootStrap JS -->
 	<script th:src="@{/bootstrap.min.js}"></script>
+	
+	<!-- 이렇게 하면 layout.html을 상속하는 템플릿에서 아무데나 
+		layout:fragment="script"인 것을 작성하면 여기에 위치된다. -->
+	<!-- 자바스크립트 Start -->
+	<th:block layout:fragment="script"></th:block>
+	<!-- 자바스크립트 End -->
 </body>
 
 </html>
