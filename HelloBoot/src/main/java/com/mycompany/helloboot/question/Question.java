@@ -2,6 +2,7 @@ package com.mycompany.helloboot.question;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import com.mycompany.helloboot.answer.Answer;
 import com.mycompany.helloboot.user.SiteUser;
@@ -12,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -60,5 +62,9 @@ public class Question {
 	private SiteUser author;
 	
 	private LocalDateTime modifyDate;
+	
+	// @manyToMany 로 설정하면 테이블을 새로 만들어서 id를 연결해서 관리해준다
+	@ManyToMany
+	Set<SiteUser> voter;
 	
 }

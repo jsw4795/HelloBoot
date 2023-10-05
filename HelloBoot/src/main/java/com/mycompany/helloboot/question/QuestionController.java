@@ -134,4 +134,13 @@ public class QuestionController {
 		// 루트 디렉토리로 보내면 /question/list로 감
 		return "redirect:/";
 	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/vote/{id}")
+	public String questionVote(Principal principal, @PathVariable("id") Integer id) {
+		Question question = this.questionService.getQuestion(id);
+		SiteUser siteUser = this.userService.getUser(principal.getName());
+		this.questionService.vote(question, siteUser);
+		return "redirect:/question/detail/" + id;
+	}
 }
