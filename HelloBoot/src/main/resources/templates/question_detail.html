@@ -57,9 +57,10 @@
 	<h5 class="border-bottom my-3 py-2"
 		th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
 
-	<!-- 답변 반복 시작 -->
+	<!-- 답변 출력 반복 시작 -->
 	<!-- 질문의 개수만큼 div를 생성하고, 텍스트는 각각 답변의 내용으로 출력한다 -->
 	<div class="card my-3" th:each="answer : ${question.answerList}">
+		<a th:id="|answer_${answer.id}|"></a>
 		<div class="card-body">
 			<div class="card-text" style="white-space: pre-line;"
 				th:text="${answer.content}"></div>
@@ -112,6 +113,8 @@
 		<input type="submit" value="답변등록" class="btn btn-primary my-2">
 	</form>
 </div>
+
+
 <script layout:fragment="script" type="text/javascript">
 	const delete_elements = document.getElementsByClassName("delete");
 	Array.from(delete_elements).forEach(function(element) {

@@ -52,9 +52,9 @@ public class AnswerController {
 			model.addAttribute("question", question);
 			return "question_detail";
 		}
-		this.answerService.create(question, answerForm.getContent(), siteUser);
+		Answer answer = this.answerService.create(question, answerForm.getContent(), siteUser);
 
-		return "redirect:/question/detail/" + id;
+		return "redirect:/question/detail/" + id + "#answer_" + answer.getId();
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -78,7 +78,7 @@ public class AnswerController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
 		this.answerService.modify(answer, answerForm.getContent());
 		// 답변의 id 가 아니라 질문의 id로 가야 하므로
-		return "redirect:/question/detail/" + answer.getQuestion().getId();
+		return "redirect:/question/detail/" + answer.getQuestion().getId() + "#answer_" + answer.getId();
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -98,7 +98,7 @@ public class AnswerController {
 		Answer answer = this.answerService.getAnswer(id);
 		SiteUser siteUser = this.userService.getUser(principal.getName());
 		this.answerService.vote(answer, siteUser);
-		return "redirect:/question/detail/" + answer.getQuestion().getId();
+		return "redirect:/question/detail/" + answer.getQuestion().getId() + "#answer_" + answer.getId();
 	}
 
 }
