@@ -50,6 +50,7 @@
 					<span>이전</span>
 				</a>
 			</li>
+			<!-- #numbers.squence(n1, n2) : n1 부터 n2 까지 연속된 수열(배열) -->
 			<li th:each="page : ${#numbers.sequence(1, paging.totalPages)}"
 				th:if="${page >= paging.number-5 and page <= paging.number+5}"
 				th:classappend="${page == paging.number+1} ? 'active'"

@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/question")
 // lombok의 애너테이션이다
 // final이 붙은 속성을 포함하는 생성자를 자동으로 만들어준다.
-// 스프링 의존선 주입 규칙에 의해 questionRepository 객체가 자동으로 주입된다.
+// 스프링 의존선 주입 규칙에 의해 QuestionService, UserService 객체가 자동으로 주입된다.
 @RequiredArgsConstructor
 @Controller
 public class QuestionController {
@@ -42,6 +42,7 @@ public class QuestionController {
 	private final UserService userService;
 	
 	@GetMapping("/list")
+	// Model은 서블릿에서 request나 session 등으로 데이터를 넘겨주는 것과 같이 스프링에서 데이터를 넘겨주는 객체다.
 	// Model 객체가 컨트롤러 메소드에 매개변수로 지정되기만 하면 스프링부트가 자동으로 Model 객체를 생성
 	// get방식으로 요청된 URL에서 page값이 있으면 가져오고 아니면 0으로 설정 (첫 페이지가 0이다)
 	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
